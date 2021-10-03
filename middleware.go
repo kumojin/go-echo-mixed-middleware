@@ -9,17 +9,17 @@ import (
 // is no error, return immediately with the answer.
 //
 // Otherwise, it is going to call the second middleware, and return their response.
-func Mixed() func(handler1, handler2 echo.MiddlewareFunc) echo.MiddlewareFunc {
+func Mixed(preserveKeys []string) func(handler1, handler2 echo.MiddlewareFunc) echo.MiddlewareFunc {
 	return func(handler1, handler2 echo.MiddlewareFunc) echo.MiddlewareFunc {
 		return func(next echo.HandlerFunc) echo.HandlerFunc {
 			a1 := handler1(next)
 			a2 := handler2(next)
 
 			return func(c echo.Context) error {
-				tempContext := copyContext(c)
+				tempContext := copyContext(c, preserveKeys)
 				defer tempContext.Echo().ReleaseContext(tempContext)
 				if a1(tempContext) == nil {
-					copyResponse(c, tempContext)
+					copyResponse(c, tempContext, preserveKeys)
 
 					return nil
 				}
@@ -28,7 +28,7 @@ func Mixed() func(handler1, handler2 echo.MiddlewareFunc) echo.MiddlewareFunc {
 				err := a2(c)
 				if err != nil {
 					// Return the first middleware error
-					copyResponse(c, tempContext)
+					copyResponse(c, tempContext, preserveKeys)
 					c.Response().WriteHeader(tempContext.Response().Status)
 				}
 				return err
