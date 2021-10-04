@@ -8,13 +8,19 @@ import (
 
 // copyContext creates a new echo.Context with the same Request, Path, Params and Handler
 // but with a Response that contains an in-memory ResponseWriter
-func copyContext(c echo.Context) echo.Context {
+func copyContext(c echo.Context, preserveKeys []string) echo.Context {
 	cc := c.Echo().AcquireContext()
 	cc.SetRequest(c.Request())
 	cc.SetPath(c.Path())
 	cc.SetParamNames(c.ParamNames()...)
 	cc.SetParamValues(c.ParamValues()...)
 	cc.SetHandler(c.Handler())
+
+	for _, key := range preserveKeys {
+		if val := c.Get(key); val != nil {
+			cc.Set(key, val)
+		}
+	}
 
 	rw := tempResponseWriter{
 		header:  make(http.Header),
@@ -26,7 +32,13 @@ func copyContext(c echo.Context) echo.Context {
 }
 
 // copyResponse copy c2 headers and content into c1
-func copyResponse(c1, c2 echo.Context) {
+func copyResponse(c1, c2 echo.Context, preserveKeys []string) {
+	for _, key := range preserveKeys {
+		if val := c2.Get(key); val != nil {
+			c1.Set(key, val)
+		}
+	}
+
 	for k, v := range c2.Response().Header() {
 		for _, vv := range v {
 			c1.Response().Header().Set(k, vv)
