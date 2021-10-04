@@ -16,10 +16,22 @@ func Mixed() func(handler1, handler2 echo.MiddlewareFunc) echo.MiddlewareFunc {
 			a2 := handler2(next)
 
 			return func(c echo.Context) error {
-				if a1(c) == nil {
+				tempContext := copyContext(c)
+				defer tempContext.Echo().ReleaseContext(tempContext)
+				if a1(tempContext) == nil {
+					copyResponse(c, tempContext)
+
 					return nil
 				}
-				return a2(c)
+
+				// Try the second middleware
+				err := a2(c)
+				if err != nil {
+					// Return the first middleware error
+					copyResponse(c, tempContext)
+					c.Response().WriteHeader(tempContext.Response().Status)
+				}
+				return err
 			}
 		}
 	}

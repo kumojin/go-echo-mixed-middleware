@@ -2,6 +2,7 @@ package mixed
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,18 +25,18 @@ func TestMixed(t *testing.T) {
 		{
 			name: "TestMixedAuthenticationSucceedsOnFirstAuth",
 			args: args{
-				mw1: succeedingMiddleware("hello"),
+				mw1: succeedingMiddleware(204),
 				mw2: failingMiddleware(errors.New("boom")),
 			},
-			want: "hello",
+			want: "204",
 		},
 		{
 			name: "TestMixedAuthenticationSucceedsOnSecondAuth",
 			args: args{
 				mw1: failingMiddleware(errors.New("boom")),
-				mw2: succeedingMiddleware("hello2"),
+				mw2: succeedingMiddleware(204),
 			},
-			want: "hello2",
+			want: "204",
 		},
 		{
 			name: "TestMixedAuthenticationFailsOnBothFailedAuths",
@@ -70,7 +71,7 @@ func TestMixed(t *testing.T) {
 					t.Errorf("got %v, want %v", err, tt.wantErr)
 				}
 
-				got = ctx.Get("KEY").(string)
+				got = fmt.Sprint(ctx.Response().Status)
 			}
 
 			if got != tt.want {
@@ -80,10 +81,10 @@ func TestMixed(t *testing.T) {
 	}
 }
 
-func succeedingMiddleware(succeedingValue string) echo.MiddlewareFunc {
+func succeedingMiddleware(status int) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			c.Set("KEY", succeedingValue)
+			c.NoContent(status)
 			return nil
 		}
 	}
