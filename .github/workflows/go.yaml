@@ -22,6 +22,7 @@ jobs:
               echo "$RUNNER_OS not supported"
               exit 0
             fi
+      shell: bash
     - name: Test
       run: go test --cover -v ./...
     - name: Build
