@@ -20,7 +20,7 @@ jobs:
               test -z $(gofmt -l .)
             else
               echo "$RUNNER_OS not supported"
-              exit 1
+              exit 0
             fi
     - name: Test
       run: go test --cover -v ./...
