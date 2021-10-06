@@ -15,7 +15,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Enforce standard format
-      run: test -z $(gofmt -l .)
+      run: |
+            if [ "$RUNNER_OS" == "Linux" ]; then
+              test -z $(gofmt -l .)
+            else
+              echo "$RUNNER_OS not supported"
+              exit 1
+            fi
     - name: Test
       run: go test --cover -v ./...
     - name: Build
