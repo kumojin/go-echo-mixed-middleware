@@ -16,12 +16,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Enforce standard format
       run: |
-            if [ "$RUNNER_OS" == "Linux" ]; then
-              test -z $(gofmt -l .)
-            else
-              echo "$RUNNER_OS not supported"
-              exit 0
-            fi
+files=$(gofmt -l .) && [ -z "$files" ]
       shell: bash
     - name: Test
       run: go test --cover -v ./...
