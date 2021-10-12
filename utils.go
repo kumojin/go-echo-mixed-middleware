@@ -49,5 +49,8 @@ func copyResponse(c1, c2 echo.Context, preserveKeys []string) {
 		c1.Response().WriteHeader(c2.Response().Status)
 	}
 
-	c1.Response().Write(c2.Response().Writer.(*tempResponseWriter).Content)
+	_, err := c1.Response().Write(c2.Response().Writer.(*tempResponseWriter).Content)
+	if err != nil {
+		panic(err)
+	}
 }

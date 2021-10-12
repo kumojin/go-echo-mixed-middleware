@@ -14,6 +14,16 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Enforce standard format
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          go get -u github.com/golangci/golangci-lint/cmd/golangci-lint@v1.42.1
+          golangci-lint run --tests=false --enable=gofmt -v
+        else
+          echo "$RUNNER_OS not supported"
+          exit 0
+        fi
+      shell: bash
     - name: Test
       run: go test --cover -v ./...
     - name: Build
