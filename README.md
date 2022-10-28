@@ -1,5 +1,8 @@
 # go-echo-mixed-middleware
-A composition middleware for Echo that will succeed if either of the middleware succeeds
+
+[![Test](https://github.com/kumojin/go-echo-mixed-middleware/actions/workflows/go.yaml/badge.svg?branch=main)](https://github.com/kumojin/go-echo-mixed-middleware/actions/workflows/go.yaml)
+
+A composition middleware for Echo that will succeed if either of the middleware succeeds.
 
 ## Guide
 ### Installation
