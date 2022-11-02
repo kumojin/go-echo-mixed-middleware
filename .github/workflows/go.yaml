@@ -22,7 +22,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.50.1
-          args: --tests=false --enable=gofmt -v
+          args: --timeout 3m --tests=false --enable=gofmt --verbose
       - name: Test
         run: go test --cover -v ./...
       - name: Build
