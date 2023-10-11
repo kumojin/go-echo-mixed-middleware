@@ -21,7 +21,7 @@ jobs:
       - name: Enforce standard format
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.50.1
+          version: v1.54.2
           args: --timeout 3m --tests=false --enable=gofmt --verbose
       - name: Test
         run: go test --cover -v ./...
