@@ -6,7 +6,7 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [ 1.17, 1.18, 1.19 ]
+        go-version: [ "1.18", "1.19", "1.20", "1.21" ]
         os: [ ubuntu-latest, macos-latest, windows-latest ]
 
     runs-on: ${{ matrix.os }}
@@ -21,7 +21,7 @@ jobs:
       - name: Enforce standard format
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.50.1
+          version: v1.54.2
           args: --timeout 3m --tests=false --enable=gofmt --verbose
       - name: Test
         run: go test --cover -v ./...
