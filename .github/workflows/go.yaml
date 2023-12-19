@@ -1,27 +1,34 @@
 name: Test
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  GOLANGCI_LINT_VERSION: "v1.55.2"
 
 jobs:
   test:
     strategy:
       matrix:
-        go-version: [ "1.18", "1.19", "1.20", "1.21" ]
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        go-version: [ "1.17", "1.18", "1.19", "1.20", "1.21" ]
+        os: [ ubuntu-22.04, macos-12, windows-2022 ]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5.0.0
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v4.1.1
       - name: Enforce standard format
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v3.7.0
         with:
-          version: v1.54.2
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
           args: --timeout 3m --tests=false --enable=gofmt --verbose
       - name: Test
         run: go test --cover -v ./...
