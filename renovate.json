@@ -27,8 +27,10 @@
       "enabled": false
     },
     {
-      "matchDepPatterns": ["github.com/labstack/echo"],
-      "automerge": false
+      "automerge": false,
+      "matchDepNames": [
+        "/github.com/labstack/echo/"
+      ]
     }
   ]
 }
