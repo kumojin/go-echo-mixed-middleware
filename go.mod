@@ -1,6 +1,6 @@
 module github.com/kumojin/go-echo-mixed-middleware
 
-require github.com/labstack/echo/v4 v4.12.0
+require github.com/labstack/echo/v4 v4.13.3
 
 require (
 	github.com/labstack/gommon v0.4.2 // indirect
@@ -14,4 +14,4 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 )
 
-go 1.17
+go 1.20
