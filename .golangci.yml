@@ -1,0 +1,9 @@
+version: "2"
+
+run:
+  tests: false
+  timeout: 3m
+
+formatters:
+  enable:
+    - gofmt
